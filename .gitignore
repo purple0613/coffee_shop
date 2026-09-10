@@ -1,2 +1,15 @@
-node_modules dist .env .env.local
-node_modules
+# Dependencies
+node_modules/
+
+# Production build
+dist/
+dist-ssr/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Editor / OS
+.DS_Store
+*.local
