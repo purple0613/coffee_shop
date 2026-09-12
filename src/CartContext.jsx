@@ -1,9 +1,26 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 
 const CartContext = createContext(null);
 
 export function CartProvider({ children }) {
     const [items, setItems] = useState([]);
+    const [toasts, setToasts] = useState([]);
+
+    const hideToast = useCallback((id) => {
+        setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, []);
+
+    const showToast = useCallback((coffee, message) => {
+        const id = 'toast-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7);
+        const newToast = {
+            id,
+            item: coffee,
+            message: message || `${coffee?.name || 'Item'} added to cart`,
+            duration: 3500
+        };
+        // Keep up to 3 toasts stacked
+        setToasts((prev) => [...prev.slice(-2), newToast]);
+    }, []);
 
     const addToCart = (coffee) => {
         setItems((prev) => {
@@ -15,6 +32,7 @@ export function CartProvider({ children }) {
             }
             return [...prev, { ...coffee, quantity: 1 }];
         });
+        showToast(coffee);
     };
 
     const removeFromCart = (coffeeId) => {
@@ -35,7 +53,7 @@ export function CartProvider({ children }) {
 
     const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
     const totalPrice = items.reduce(
-        (sum, i) => sum + parseFloat(i.price) * i.quantity,
+        (sum, i) => sum + parseFloat(i.price || 0) * i.quantity,
         0
     );
 
@@ -48,7 +66,10 @@ export function CartProvider({ children }) {
                 updateQuantity,
                 clearCart,
                 totalItems,
-                totalPrice
+                totalPrice,
+                toasts,
+                showToast,
+                hideToast
             }}
         >
             {children}
@@ -62,4 +83,4 @@ export function useCart() {
         throw new Error('useCart must be used within a CartProvider');
     }
     return context;
-}
+}

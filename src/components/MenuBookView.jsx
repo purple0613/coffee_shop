@@ -145,9 +145,10 @@ export default function MenuBookView({ onBackToLanding, onSelectCoffee }) {
             {totalPages > 1 && (
               <div className="notebook-page-nav" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1.5rem' }}>
                 <button
-                  className="btn-notebook-back"
+                  className="btn-notebook-back btn-page-nav-prev"
                   onClick={goPrev}
                   disabled={page === 0}
+                  aria-disabled={page === 0}
                 >
                   ← Previous
                 </button>
@@ -171,9 +172,10 @@ export default function MenuBookView({ onBackToLanding, onSelectCoffee }) {
                 </div>
 
                 <button
-                  className="btn-notebook-back"
+                  className="btn-notebook-back btn-page-nav-next"
                   onClick={goNext}
                   disabled={page === totalPages - 1}
+                  aria-disabled={page === totalPages - 1}
                 >
                   Next →
                 </button>
